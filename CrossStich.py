@@ -10,9 +10,9 @@ from pathlib import Path
 # Variables
 current_year = datetime.now().year
 url = "https://flosscross.com/designer"
-FilesToProcess = Path("C:\\Temp\\CrossStitch\\FCJsonFile")
-SaveLocation = Path("C:\\Temp\\CrossStitch\\ProcessedFiles")
-DownloadLocation = Path("C:\\Users\\dalle\\Downloads")
+FilesToProcess = Path("G:\\My Drive\\Cross Stitch\\fcjson files")
+SaveLocation = Path("G:\\My Drive\\Cross Stitch\\Patterns not yet on Etsy\\ProcessedJsons")
+DownloadLocation = Path("C:\\Users\\jolen\\Downloads")
 
 # Launch Brower
 chrome_options = Options()
@@ -51,6 +51,7 @@ def ProcessPDF(PDFFile):
 def ProccessJsons(FilePath, FCJsonFullpath, Filename):
     PatternFolderName = Filename.split(" Cross")[0]
     PatternFolderLocation = os.path.join(SaveLocation, PatternFolderName)
+    OldFCJson = FCJsonFullpath
 
     # Create Folder
     print(Fore.GREEN + "Creating Folder : " + Fore.BLUE + PatternFolderLocation)
@@ -114,7 +115,7 @@ def ProccessJsons(FilePath, FCJsonFullpath, Filename):
     # Edit Footer
     Footer.send_keys(Keys.CONTROL + "a")
     Footer.send_keys(Keys.DELETE)
-    FooterText = f"\u00a9{current_year} Little things by joe"
+    FooterText = f"\u00a9{current_year} Copyright littlethingsbyjoe"
     time.sleep(2)
     Footer.send_keys(FooterText)
 
@@ -411,6 +412,11 @@ def ProccessJsons(FilePath, FCJsonFullpath, Filename):
         "/html/body/div[5]/div[2]/div/div[4]/button[2]",
     ).click()
 
+    if os.path.exists(FCJsonFullpath):
+        os.remove(OldFCJson)
+    else:
+        print("The file does not exist")
+
     time.sleep(5)
 
 
@@ -419,6 +425,7 @@ for filename in os.listdir(FilesToProcess):
     # checking if it is a file
     if filename.endswith(".fcjson") and os.path.isfile(f):
         ProccessJsons(FilesToProcess, f, filename)
+    
 
 
 driver.close()
